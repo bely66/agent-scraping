@@ -81,9 +81,11 @@ This project aims to develop an automatic agent that scrapes Amazon orders, retr
 The agent don't have access to the passwords, but has access to the variables containing them, this way the data isn't sent to openai's servers.
 
 Run the automated agent script:
+
     ```bash
     python main.py
     ```
+
 # Todos
 
 ## Todos Phase 1
