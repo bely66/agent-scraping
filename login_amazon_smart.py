@@ -16,7 +16,7 @@ amz_username = os.getenv("amz_mail")
 amz_password = os.getenv("amz_pass")
 
 # Read instructions from file
-with open("manual_plan.txt", "r") as f:
+with open("instructions.txt", "r") as f:
     instructions = f.read()
 
 # Initialize Instruction Compiler
