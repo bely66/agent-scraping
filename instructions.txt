@@ -1,5 +1,5 @@
 instructions:
-- Open amazon.eg
+- Open https://amazon.eg
 - Find the "تسجيل الدخول" or "Sign in" button or link
 - Click the button and wait for two seconds
 - Find all the text inputs and search for "user" or "email" text input (don't use placeholders)
@@ -14,4 +14,4 @@ instructions:
 - Find all the order objects containing "View order details" link or button
 - Save the href in each order in a list
 - Open each link and save its html
-- Save the HTML on disk with the index as name
+- Save the HTML on disk with in "html_data" folder and use index as name

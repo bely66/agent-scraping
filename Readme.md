@@ -4,25 +4,37 @@
 
 This project aims to develop an automatic agent that scrapes Amazon orders, retrieving their details in a structured format. The initial focus is on Amazon Egypt due to the availability of existing orders for testing.
 
-## Approach
+## Strategy to Develop an Automated Data Scraping Agent for Amazon
 
-The project will be completed in two stages:
+#### Strategy Overview:
+1. **Initial Manual Process**:
+   - Perform the entire data scraping process manually to understand each step thoroughly.
+   - This includes reading library documentation, understanding and debugging code errors, reading HTML contents of the pages, and interacting with page elements.
 
-### Stage One: Manual Approach
-In this stage, we will manually navigate the Amazon website using Selenium. This will help us understand the meta-steps required for the agent to function correctly and provide familiarity with Selenium.
+2. **Incremental Automation**:
+   - Abstract and automate each step identified in the manual process.
+   - Ensure the agent can handle various challenges, such as slow internet speeds and handling ads or popups.
 
-### Stage Two: Automated Agent
-In this stage, we will create a prompt to enable the model to use Selenium for interacting with the Amazon webpage. The agent will navigate to the order page and continue until all orders are downloaded.
+3. **Quality and Adaptability**:
+   - Develop the agent with qualities such as robust abstraction of manual steps and adaptability to handle unexpected scenarios.
+   - Envision a "super agent" that can complete tasks with minimal input, such as "scrape Amazon orders using the following username and password."
 
-## Plan
+#### Phased Implementation Plan:
 
-1. **Define a Prompt for the LLM**: Develop a prompt that allows the language model to generate accurate Selenium code.
-2. **Error Handling**: Implement a function to retry operations if mistakes occur, enabling the agent to correct itself.
-3. **Data Extraction**: 
-    - Test the agent's ability to navigate all orders independently.
-    - Evaluate the agent's capacity to extract structured information from the data.
-        - Option 1: Extract relevant objects and use Python code for reliable data extraction.
-        - Option 2: Use the LLM's capabilities to extract the information directly.
+##### Phase 1: Basic Functionality
+- **Agent 1**: Generates Selenium code to fetch product details based on detailed instructions.
+- **Agent 2**: Extracts data using Beautiful Soup code, also based on detailed instructions.
+
+##### Phase 2: Enhanced Automation with Feedback
+- **Agent 1**: Executes Selenium code multiple times, incorporating feedback from the website to improve performance.
+- **Agent 2**: Explores HTML patterns to generate more efficient Beautiful Soup code.
+
+##### Phase 3: Generalized Instructions
+- **Agent 1** and **Agent 2**: Operate based on more general instructions, reducing the need for detailed guidance.
+
+##### Phase 4: Unified Intelligent Agent
+- Combine the functionalities of the two agents into a single, highly autonomous agent that can perform the entire scraping process with minimal input.
+
 
 ## Getting Started
 

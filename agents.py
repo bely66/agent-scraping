@@ -360,6 +360,9 @@ class InstructionCompiler:
         # Optimistically count the instruction as finished.
         self.finished_instructions.append(last_instructions)
         return action_info
+    
+
+
 
 if __name__ == "__main__":
     import pprint
