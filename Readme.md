@@ -108,10 +108,5 @@ Run the automated agent script:
 ## Ideas to improve automation
 - [ ] Incorporate memory so that the agent can use past actions to learn
 
-### Contributing
 
-Contributions are welcome! Please fork the repository and create a pull request with your changes.
 
-### License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
