@@ -105,6 +105,9 @@ Run the automated agent script:
 - [ ] Use the logs and documentation we have from that model to train a smaller model (a good Python model to be fine-tuned on Selenium and BeautifulSoup).
 - [ ] We'll need to experiment with the model size but generally a 13b quantized model trained with LORA in 4bit will be perfect in terms of both accuracy, memory requirements, flexibility, and speed.
 
+## Ideas to improve automation
+- [ ] Incorporate memory so that the agent can use past actions to learn
+
 ### Contributing
 
 Contributions are welcome! Please fork the repository and create a pull request with your changes.
