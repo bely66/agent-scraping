@@ -1,14 +1,17 @@
 instructions:
 - Open amazon.eg
-- Find the login button
-- Click it and wait for two seconds
-- Find all the text inputs and search for user or email text input (don't use placeholders)
-- Fill it with the provided email and click enter
+- Find the "تسجيل الدخول" or "Sign in" button or link
+- Click the button and wait for two seconds
+- Find all the text inputs and search for "user" or "email" text input (don't use placeholders)
+- Raise an error if you don't find it
+- Fill it with the amz_username variable and click enter
 - Wait for two seconds
 - Search for the inputs
-- find the password input
-- Enter 1234 in the password field and click enter
+- find the "password" input
+- Enter amz_password variable in the password field and click enter
 - Wait for 2 seconds
-- Find the orders button and click it
-- Find all the order objects containing (view order details) button
-- Loop over all the order objects and print the information inside them
+- Find the "Orders" button and click it
+- Find all the order objects containing "View order details" link or button
+- Save the href in each order in a list
+- Open each link and save its html
+- Save the HTML on disk with the index as name
