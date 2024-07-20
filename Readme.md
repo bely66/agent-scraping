@@ -56,6 +56,13 @@ This project aims to develop an automatic agent that scrapes Amazon orders, retr
     ```bash
     pip install -r requirements.txt
     ```
+3. Create .env file and add the following (I chose to use the .env file to store the API key and the Amazon credentials safely):
+    ```bash
+    OPENAI_API_KEY='openai_api_key'
+    # ask the user about their username and password
+    amz_mail="amazon_email"
+    amz_pass="amazon_password"
+    ```
 
 
 ### Usage
@@ -71,14 +78,30 @@ This project aims to develop an automatic agent that scrapes Amazon orders, retr
 
 #### Stage Two: Automated Agent
 
-1. Update the prompt and agent configuration as needed in `agent_config.py`.
+The agent don't have access to the passwords, but has access to the variables containing them, this way the data isn't sent to openai's servers.
 
-2. Run the automated agent script:
+Run the automated agent script:
     ```bash
-    python login_amazon_smart.py
+    python main.py
     ```
+# Todos
 
-3. Monitor the agent's progress and review the extracted data.
+## Todos Phase 1
+
+- [ ] Add a way to scroll through all the products using the years filter.
+- [ ] Extract the properties of all divs and send it to the Structurer agent to generate the suitable Beautiful Soup code.
+- [ ] Add retrying mechanism while sending the trace of the mistakes to handle any code issues.
+
+## Todos for Phase 2
+
+- [ ] Rewrite the prompt to be more generic, in the sense it responds to code outputs rather than only writing code.
+- [ ] Find a way to have a brief overview of elements on the page in Selenium or BeautifulSoup so the agent can have the needed information to make an informed decision without exceeding the maximum length as HTMLs could be very long.
+
+## Todos for Model Size
+
+- [ ] It's advisable we get to the wanted performance from a very good model.
+- [ ] Use the logs and documentation we have from that model to train a smaller model (a good Python model to be fine-tuned on Selenium and BeautifulSoup).
+- [ ] We'll need to experiment with the model size but generally a 13b quantized model trained with LORA in 4bit will be perfect in terms of both accuracy, memory requirements, flexibility, and speed.
 
 ### Contributing
 

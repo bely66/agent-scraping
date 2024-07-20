@@ -1,5 +1,5 @@
 instructions:
-- Open https://amazon.eg
+- Open "https://amazon.eg"
 - Find the "تسجيل الدخول" or "Sign in" button or link
 - Click the button and wait for two seconds
 - Find all the text inputs and search for "user" or "email" text input (don't use placeholders)

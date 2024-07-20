@@ -67,6 +67,17 @@ Your code must obey the following constraints:
 - You may not import any modules. You may not use any external libraries.
 """
 
+HTML_PROMPT = """You'll be provided with Text extracted from an Amazon Order HTML. 
+We want to extract the key order details from the Text, order number, total price, product names, quantities, prices, currency, delivery status and delivery date in JSON format
+{json_shape}
+
+HTML Text:
+{html_text}
+
+- Only reply with json, don't write anything else
+- Use double quotes in JSON to be correctly parsed"""
+
+
 FINDER_PROMPT = """You'll be provided with an HTML of a web page Below.
 Your job is given this html, find the element that matches our query.
 And return the xpath query to get that object. 
@@ -362,18 +373,216 @@ class InstructionCompiler:
         return action_info
     
 
+class HTMLParser:
+    def __init__(
+        self,
+        base_prompt=HTML_PROMPT,
+        parser_model="gpt-3.5-turbo",
+    ):
+        self.model = parser_model
+        logger.info(f"Using model {self.model}.")
+        self.base_prompt = base_prompt
 
+    def find_json_re(self, model_response):
+        import re
+        # Find the json response in the model response
+        json_pattern = re.compile(r'\{.*\}', re.DOTALL)
+
+        # Search for the JSON part in the input string
+        json_match = json_pattern.search(model_response)
+        if json_match:
+            return json_match.group()
+        return None
+    def get_order_details(self, html_text):
+        json_shape = "{'order_number':  122112, etc..}"
+        prompt = self.base_prompt.format(html_text=html_text, json_shape=json_shape)
+        completion = self.get_completion(prompt).strip()
+        cleaned_json = self.find_json_re(completion)
+        print("cleaned_json", cleaned_json)
+        json_resp = json.loads(cleaned_json)
+        return json_resp
+
+    
+    def get_completion(
+        self, prompt, model=None, temperature=0, max_tokens=1024, stop=["```"]
+    ):
+        print("Getting completion")
+        """Wrapper over OpenAI's completion API."""
+       
+        if model is None:
+            model = self.model
+        print("model", model)
+        # Check if it's in the cache already.
+
+        try:
+            if "gpt-4o-mini" in model:
+                print("Using gpt-4o-mini")
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=[{"role": "user", "content": prompt}],
+                    max_tokens=max_tokens,
+                    top_p=1,
+                    frequency_penalty=0,
+                    presence_penalty=0,
+                    temperature=temperature,
+                )
+                text = response.choices[0].message.content
+                print("text", text)
+
+            elif "gpt-3.5-turbo" in model or "gpt-4" in model:
+
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=[{"role": "user", "content": prompt}],
+                    max_tokens=max_tokens,
+                    top_p=1,
+                    frequency_penalty=0,
+                    presence_penalty=0,
+                    temperature=temperature,
+                    stop=stop,
+                )
+                text = response.choices[0].message.content
+            else:
+                response = client.completions.create(
+                    model=model,
+                    prompt=prompt,
+                    max_tokens=max_tokens,
+                    top_p=1,
+                    frequency_penalty=0,
+                    presence_penalty=0,
+                    best_of=1,
+                    temperature=temperature,
+                    stop=stop,
+                )
+                text = response.choices[0].text
+        except OpenAIError as exc:
+            logger.info(
+                "OpenAI error. Likely a rate limit error, API error, or timeout: {exc}. Sleeping for a few seconds.".format(
+                    exc=str(exc)
+                )
+            )
+            time.sleep(5)
+            text = self.get_completion(
+                prompt, temperature=temperature, max_tokens=max_tokens, model=model
+            )
+        except Exception:
+            traceback.print_exc()
+
+        return text
 
 if __name__ == "__main__":
-    import pprint
+    # import pprint
 
-    pp = pprint.PrettyPrinter(indent=4)
+    # pp = pprint.PrettyPrinter(indent=4)
 
-    with open("manual_plan.txt", "r") as f:
-        instructions = f.read()
+    # with open("manual_plan.txt", "r") as f:
+    #     instructions = f.read()
 
-    compiler = InstructionCompiler(instructions=instructions, model='gpt-4o-mini')
+    # compiler = InstructionCompiler(instructions=instructions, model='gpt-4o-mini')
 
-    while compiler.instructions_queue:
-        action_info = compiler.step()
-        pp.pprint(action_info)
+    # while compiler.instructions_queue:
+    #     action_info = compiler.step()
+    #     pp.pprint(action_info)
+
+    # test parser
+    html_text = """Your Account›Your Orders›Order Details
+Order Details
+                Ordered on 29 June 2024
+                
+                Order#
+                171-8229869-3714749
+                Invoice 1
+            
+                Request invoice
+            
+                Printable Order Summary
+            
+Invoice
+    Invoice 1
+    Request invoice
+    Printable Order Summary
+        Shipping Address
+    
+Mohamed Nabil Mohamed
+مدينة المهندسين
+عمارة ١٨ الدور التاني شقة باب حديد اسود على الشمال
+Alexandria, Qesm Borg Al Arab, Madinet Borg Al Arab
+Egypt
+Payment Methods Mastercardending in 5603
+    Order Summary
+            Item(s) Subtotal: 
+        
+        EGP 435.33
+    
+            Shipping & Handling:
+        
+        EGP 0.00
+    
+            Total before VAT:
+        
+        EGP 435.33
+    
+            Estimated VAT:
+        
+        EGP 38.83
+    
+            Total:
+        
+        EGP 474.16
+    
+            Grand Total:
+        
+        EGP 474.16
+    
+    Delivered Jun 30, 2024
+                Your package was delivered. It was handed directly to a resident.
+            
+            Track package
+        
+        2ool Ameme Wala3a Card Game
+    
+    Sold by: 
+        Amazon.eg
+Return window closed on Jul 15, 2024
+    EGP 195.07
+                Buy it again
+            
+        SCREW 60 CART
+    
+    Sold by: 
+        Amazon.eg
+Return window closed on Jul 15, 2024
+    EGP 121.09
+                Buy it again
+            
+        Nilco speechless
+    
+    Sold by: 
+        
+Top Toys EG
+Return window closed on Jul 15, 2024
+    EGP 69.00
+                Buy it again
+            
+            Leave seller feedback
+        
+            Write a product review
+        
+    Delivered Jun 30, 2024
+                Your package was delivered. It was handed directly to a resident.
+            
+            Track package
+        
+        UNO Flip Play Card Game party game
+    
+    Sold by: 
+        
+Alaa-Eldin
+Return window closed on Jul 15, 2024
+    EGP 89.00
+                Buy it again
+            
+            Leave seller feedback
+        """
+    parser = HTMLParser(parser_model='gpt-4o-mini')
+    print(parser.get_order_details(html_text))

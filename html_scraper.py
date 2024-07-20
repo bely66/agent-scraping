@@ -6,6 +6,13 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from agents import InstructionCompiler
+import os
+
+html_tmp = 'html_data/'
+
+# Create folder if it does not exist
+if not os.path.exists(html_tmp):
+    os.makedirs(html_tmp)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -41,7 +48,7 @@ def execute_action(action, ldict, compiler, max_attempts=3):
     return False
 
 # Main function to perform the automation
-def main():
+def html_scraper():
     # Create a new instance of the Chrome driver
     compiler = InstructionCompiler(instructions=instructions, model='gpt-4o-mini')
 
@@ -67,4 +74,4 @@ def main():
         driver.quit()
 
 if __name__ == "__main__":
-    main()
+    html_scraper()
